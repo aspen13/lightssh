@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<package name="msg_catalog" extends="default" namespace="/message/catalog">
+		<action name="list" class="catalogAction" method="list">
+			<result name="success">/pages/message/catalog/list.jsp</result>	
+        </action>
+        
+		<action name="popup" class="catalogAction" method="list">
+			<result name="success">/pages/message/catalog/popup.jsp</result>	
+        </action>
+    </package>
+    
+	<package name="msg_subscription" extends="default" namespace="/message/subscription">
+		<action name="list" class="subscriptionAction" method="list">
+			<result name="success">/pages/message/subscription/list.jsp</result>	
+        </action>
+        
+		<action name="edit" class="subscriptionAction" method="edit">
+			<result name="success">/pages/message/subscription/profile.jsp</result>	
+        </action>
+        
+        <action name="unique" class="subscriptionAction" method="unique">
+			<result name="success" type="json">
+				<param name="includeProperties">unique</param>
+			</result>
+        </action>
+        
+		<action name="save" class="subscriptionAction" method="save">
+			<result name="input">/pages/message/subscription/profile.jsp</result>	
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+    </package>
+    
+    <package name="msg_message" extends="default" namespace="/message/message">
+		<action name="list" class="messageAction" method="list">
+			<result name="success">/pages/message/message/list.jsp</result>	
+        </action>
+        
+		<action name="outbox" class="messageAction" method="outbox">
+			<result name="success">/pages/message/message/list_outbox.jsp</result>	
+        </action>
+        
+		<action name="view" class="messageAction" method="edit">
+			<result name="success">/pages/message/message/view.jsp</result>
+        </action>
+        
+		<action name="edit" class="messageAction" method="edit">
+			<result name="success">/pages/message/message/profile.jsp</result>
+        </action>
+        
+		<action name="save" class="messageAction" method="save">
+			<result name="input">/pages/message/message/profile.jsp</result>
+			<result name="success" type="redirectAction">outbox</result>	
+        </action>
+        
+		<action name="myremove" class="messageAction" method="myRemove">
+			<result name="input" type="redirectAction">outbox</result>	
+			<result name="success" type="redirectAction">outbox</result>	
+        </action>
+        
+		<action name="remove" class="messageAction" method="remove">
+			<result name="input" type="redirectAction">list</result>	
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+		<action name="revoke" class="messageAction" method="revoke">
+			<result name="input" type="redirectAction">outbox</result>	
+			<result name="success" type="redirectAction">outbox</result>	
+        </action>
+    </package>
+    
+    <package name="msg_publish" extends="default" namespace="/message/publish">
+        
+		<action name="read" class="publishAction" method="read">
+			<result name="success" type="json">
+				<param name="includeProperties">result.*</param>
+			</result>
+        </action>
+        
+		<action name="remove" class="publishAction" method="remove">
+			<result name="success" type="json">
+				<param name="includeProperties">result.*</param>
+			</result>
+        </action>
+        
+		<action name="myunreadcount" class="publishAction" method="myUnreadCount">
+			<result name="success" type="json">
+				<param name="includeProperties">count</param>
+			</result>
+        </action>
+        
+		<action name="mylist" class="publishAction" method="myList">
+			<result name="success">/pages/message/publish/my_list.jsp</result>	
+        </action>
+        
+		<action name="preforward" class="publishAction" method="preforward">
+			<result name="input" type="redirectAction">mylist</result>
+			<result name="success">/pages/message/publish/forward.jsp</result>	
+        </action>
+        
+		<action name="forward" class="publishAction" method="forward">
+			<result name="input" type="redirectAction">mylist</result>
+			<result name="success" type="redirectAction">mylist</result>
+        </action>
+        
+    </package>
+    
+</struts>

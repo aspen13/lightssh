@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<package name="security_account" extends="default" namespace="/security/account">
+		<action name="edit" class="loginAccountAction" method="edit">
+			<result name="input">/pages/security/account/profile.jsp</result>
+			<result name="success">/pages/security/account/profile.jsp</result>
+			<result name="password">/pages/security/account/password.jsp</result>
+			<result name="error" type="redirectAction">list</result>
+		</action>
+
+		<action name="save" class="loginAccountAction" method="save">
+			<interceptor-ref name="crudStack"/>
+			<result name="input" >/pages/security/account/profile.jsp</result>
+			<result name="next" type="redirectAction">edit</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+        
+        <action name="password" class="loginAccountAction" method="password">
+			<result name="input">/pages/security/account/password.jsp</result>
+        </action>
+        
+        <action name="my" class="loginAccountAction" method="myprofile">
+        	<result name="success" >/pages/security/account/view.jsp</result>
+        </action>
+       
+        <action name="view" class="loginAccountAction" method="view">
+			<result name="input" type="redirectAction">list</result>
+        	<result name="success" >/pages/security/account/view.jsp</result>
+        </action>
+       
+        <action name="popupview" class="loginAccountAction" method="view">
+        	<result name="input" >/pages/security/system/notfound_ajax.jsp</result>
+        	<result name="success" >/pages/security/account/view.jsp</result>
+        </action>
+        
+        <action name="workflowview" class="loginAccountAction" method="workflowView">
+			<result name="success">/pages/security/account/workflow_view.jsp</result>
+		</action>
+        
+		<action name="list" class="loginAccountAction" method="list">
+			<result name="success" >/pages/security/account/list.jsp</result>
+		</action>
+		
+		<action name="popup" class="loginAccountAction" method="popup">
+			<result name="success" >/pages/security/account/popup.jsp</result>
+			<result name="multi" type="redirectAction" >
+				<param name="namespace">/</param>
+				<param name="actionName">multipopup</param>
+				<param name="popup_multi_url">/security/account/multipopup.do</param>
+			</result>
+		</action>
+		
+		<action name="multipopup" class="loginAccountAction" method="list">
+			<result name="success" >/pages/security/account/multi_popup.jsp</result>
+		</action>
+        
+        <action name="remove" class="loginAccountAction" method="delete">
+			<result name="success" type="redirectAction">list</result>
+			<result name="input" type="redirectAction">list</result>
+		</action>
+
+		<action name="prereset" class="loginAccountAction" method="prereset">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" >/pages/security/account/resetpassword.jsp</result>
+        </action>
+        
+        <action name="resetpassword" class="loginAccountAction" method="resetpassword">
+			<result name="input" >/pages/security/account/resetpassword.jsp</result>
+			<result name="success" type="redirectAction">list</result>
+		</action>
+		
+		<action name="releaselock" class="loginAccountAction" method="releaselock">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+		
+		<action name="todoauditlist" class="loginAccountAction" method="todoAuditList">
+			<result name="success">/pages/security/account/todo_audit_list.jsp</result>
+		</action>
+		
+		<action name="todoaudit" class="loginAccountAction" method="todoAudit">
+			<result name="input" type="redirectAction">todoauditlist</result>
+			<result name="success">/pages/security/account/todo_audit.jsp</result>
+		</action>
+		
+		<action name="audit" class="loginAccountAction" method="audit">
+			<result name="error" type="redirectAction">list</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">todoaudit</param>
+				<param name="accountChange.id">${accountChange.id}</param>
+				<param name="accountChange.loginAccount.id">${accountChange.loginAccount.id}</param>
+			</result>
+			<result name="success" type="redirectAction">list</result>
+		</action>
+		
+		<action name="auditlist" class="loginAccountAction" method="auditList">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success">/pages/security/account/audit_list.jsp</result>
+		</action>
+
+		<action name="report" class="reportLoginAccountAction" method="report">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" type="stream">
+ 				<param name="inputName">inputStream</param>
+ 				<param name="contentType">${jasperEngine.contentType}</param>
+ 				<param name="contentDisposition">filename="LoginAccountReport"</param>
+ 				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+
+		<action name="validatepassword" class="loginAccountAction" method="validatePassword">
+			<result name="success" type="json">
+				<param name="includeProperties">passed</param>
+			</result>
+		</action>
+		
+		<action name="validateauth" class="loginAccountAction" method="validateAuth">
+			<result name="success" type="json">
+				<param name="includeProperties">authType,ticket,message</param>
+			</result>
+		</action>
+		
+		<action name="authresource" class="loginAccountAction" method="authResource">
+			<result name="success" type="json">
+				<param name="includeProperties">passed,ticket,message</param>
+			</result>
+		</action>
+		
+	</package>
+	
+	<package name="security_password" extends="default" namespace="/security/recovery">
+		<action name="account" class="loginAccountAction" method="recovery">
+			<result name="success">/pages/security/account/recovery.jsp</result>
+		</action>
+		
+		<action name="forgotpassword" class="loginAccountAction" method="forgotpassword">
+			<result name="input" type="redirectAction">account</result>
+			<result name="success">/pages/security/account/recovery/forgotpassword.jsp</result>
+        	</action>
+        
+		<action name="forgotusername" class="loginAccountAction" method="forgotusername">
+			<result name="input">/pages/security/account/recovery/forgotusername.jsp</result>
+			<result name="success">/pages/security/account/recovery/help_username.jsp</result>
+        	</action>
+		
+		<action name="emailrecovery" class="loginAccountAction" method="emailrecovery">
+			<result name="input">/pages/security/account/recovery/forgotpassword.jsp</result>
+			<result name="success">/pages/security/account/recovery/help_byemail.jsp</result>
+		</action>
+		
+		<action name="emailretrieve" class="loginAccountAction" method="emailretrieve">
+			<result name="input">/pages/security/account/recovery/help_erroremailretrieve.jsp</result>
+			<result name="success">/pages/security/account/recovery/retrievepassword.jsp</result>
+		</action>
+		
+		<action name="retrieve" class="loginAccountAction" method="retrieve">
+			<result name="error">/pages/security/account/recovery/help_erroremailretrieve.jsp</result>
+			<result name="input">/pages/security/account/recovery/retrievepassword.jsp</result>
+			<result name="success">/pages/security/account/recovery/retrievesuccess.jsp</result>
+		</action>
+		
+	</package>
+
+	<package name="security_role" extends="default" namespace="/security/role">
+        <action name="edit" class="roleAction" method="edit">
+			<result name="success">/pages/security/role/profile.jsp</result>	
+        </action>
+        
+		<action name="view" class="roleAction" method="edit">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success">/pages/security/role/view.jsp</result>
+		</action>
+		
+		<action name="workflowview" class="roleAction" method="workflowView">
+			<result name="success">/pages/security/role/workflow_view.jsp</result>
+		</action>
+        
+        <action name="save" class="roleAction" method="save">
+        	<interceptor-ref name="crudStack"/>
+			<result name="input" >/pages/security/role/profile.jsp</result>
+			<result name="success" type="redirectAction">list</result>
+			<result name="authorize" type="redirectAction">
+				<param name="actionName">permission</param>
+				<param name="role.id">${role.id}</param>
+			</result>
+        </action>
+        
+        <action name="list" class="roleAction" method="list">
+			<result name="success" >/pages/security/role/list.jsp</result>
+        </action>
+        
+		<action name="todoauditlist" class="roleAction" method="todoAuditList">
+			<result name="success">/pages/security/role/todo_audit_list.jsp</result>
+		</action>
+		
+		<action name="todoaudit" class="roleAction" method="todoAudit">
+			<result name="input" type="redirectAction">todoauditlist</result>
+			<result name="success">/pages/security/role/todo_audit.jsp</result>
+		</action>
+		
+		<action name="audit" class="roleAction" method="audit">
+			<result name="error" type="redirectAction">list</result>
+			<result name="input" type="chain">todoaudit</result>
+			<result name="success" type="redirectAction">list</result>
+		</action>
+		
+		<action name="auditlist" class="roleAction" method="auditList">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success">/pages/security/role/audit_list.jsp</result>
+		</action>
+
+		<action name="remove" class="roleAction" method="delete">
+			<result name="success" type="redirectAction">list</result>
+			<result name="input" type="redirectAction">list</result>
+		</action>
+
+		<action name="addPermission" class="roleAction" method="addPermission">
+			<result name="input">/pages/security/role/profile.jsp</result>
+			<result name="success" type="redirectAction">list</result>
+		</action>
+
+		<action name="popup" class="roleAction" method="popup">
+			<result name="success" type="json">
+				<param name="includeProperties">
+					^page\.list\[\d+\]\.id,
+					^page\.list\[\d+\]\.name,
+					^page\.list\[\d+\]\.description,
+					^page\.list\.size,
+					page\.allSize,
+					page\.size,
+					page\.number
+				</param>
+			</result>
+			
+			<result name="multi" type="redirectAction" >
+				<param name="namespace">/</param>
+				<param name="actionName">multipopup</param>
+				<param name="popup_multi_url">/security/role/multipopup.do</param>
+			</result>
+		</action>
+		
+		<action name="multipopup" class="roleAction" method="popup">
+			<result name="success" >/pages/security/role/multi_popup.jsp</result>
+		</action>
+	</package>
+
+	<package name="security_navigation" extends="default" namespace="/security/navigation">
+		<action name="list" class="navigationAction" method="list">
+			<result name="success">/pages/security/navigation/list.jsp</result>
+		</action>
+	</package>
+
+</struts>

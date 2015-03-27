@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<package name="party" extends="default" namespace="/party">
+		<action name="popup" class="partyAction" method="popup">
+			<result name="success">/pages/party/popup.jsp</result>	
+        </action>
+    </package>
+    
+	<package name="party_organization" extends="default" namespace="/party/organization">
+		<action name="edit" class="organizationAction" method="edit">
+			<result name="input">/pages/party/organization/profile.jsp</result>	
+			<result name="success">/pages/party/organization/profile.jsp</result>	
+			<result name="settings" type="redirect">/settings/organization/viewparent.do</result>	
+        </action>
+        
+        <action name="popup" class="organizationAction" method="popup">
+			<result name="success" >/pages/party/organization/popup.jsp</result>
+        </action>
+        
+        <action name="save" class="organizationAction" method="save">
+        	<interceptor-ref name="crudStack"/>
+			<result name="input" >/pages/party/organization/profile.jsp</result>
+			<result name="success" type="redirectAction">list</result>
+			<result name="next" type="redirectAction">edit</result>
+        </action>
+        
+        <action name="list" class="organizationAction" method="list">
+			<result name="success" >/pages/party/organization/list.jsp</result>
+        </action>
+        
+        <action name="remove" class="organizationAction" method="delete">
+			<result name="success" type="redirectAction">list</result>
+			<result name="input" type="redirectAction">list</result>
+        </action>
+        
+        <action name="unique" class="partyAction" method="unique">
+			<result name="success" type="json">
+				<param name="includeProperties">unique</param>
+			</result>
+        </action>
+	</package>
+	
+	<package name="party_person" extends="default" namespace="/party/person">
+		<action name="edit" class="partyAction" method="edit">
+			<result name="input">/pages/party/person/profile.jsp</result>	
+			<result name="success">/pages/party/person/profile.jsp</result>	
+			<result name="family">/pages/party/person/profile_family.jsp</result>	
+			<result name="contact">/pages/party/person/profile_contact.jsp</result>	
+			<result name="employee">/pages/party/person/profile_employee.jsp</result>	
+        </action>
+        
+        <action name="view" class="partyAction" method="view">
+        	<result name="input" type="redirectAction">notfound</result>
+			<result name="success">/pages/party/person/view.jsp</result>	
+        </action>
+        
+        <action name="save" class="partyAction" method="save">
+			<result name="input" >/pages/party/person/profile.jsp</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+        
+        <action name="saveemployee" class="partyAction" method="saveEmployee">
+			<result name="input" >/pages/party/person/profile.jsp</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+        
+        <action name="list" class="partyAction" method="list">
+			<result name="success" >/pages/party/person/list.jsp</result>
+        </action>
+        
+        <action name="remove" class="partyAction" method="delete">
+			<result name="success" type="redirectAction">list</result>
+			<result name="input" type="redirectAction">list</result>
+        </action>
+	</package>
+	
+	<package name="party_contact" extends="default" namespace="/party/contact">
+		<action name="save" class="partyContactAction" method="save">
+			<result name="input" type="json">
+				<param name="includeProperties">result</param>
+			</result>
+			<result name="success" type="json">
+				<param name="includeProperties">
+					result,contact.*
+				</param>
+			</result>
+        </action>
+	</package>
+	
+</struts>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false">
+	<diskStore path="java.io.tmpdir"></diskStore>
+	
+	<defaultCache
+		maxElementsInMemory="1000"
+		eternal="false"
+		timeToIdleSeconds="120"
+		overflowToDisk="true"
+	>
+	</defaultCache>
+	
+	<!-- 存放指定session过期的username,失效时间与web.xml中session失效时间对应 -->
+	<cache name="sessionInvalidateUserCache"
+		maxElementsInMemory="100"
+		maxElementsOnDisk="500"
+		diskPersistent="false"
+		eternal="false"
+		timeToIdleSeconds="1800"
+		timeToLiveSeconds="1800"
+		overflowToDisk="true"
+	/>
+
+	
+</ehcache>

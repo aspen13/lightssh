@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC 
+	"-//Apache Struts//XWork Validator 1.0.2//EN" 
+	"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+	
+<validators>
+	<field name="account.loginName" >
+		<field-validator type="requiredstring">
+            <message>“登录账号”为必填项！</message>
+        </field-validator>
+        
+        <field-validator type="fieldexpression" >
+            <param name="expression">
+				( account.loginName.length() &lt; 100)
+            </param>
+            <message>“登录账号”长度不能大于100字符！</message>
+        </field-validator>
+        
+        <field-validator type="fieldexpression" >
+            <param name="expression">
+                 (account.loginName.matches("^[\\w\\u4e00-\\u9fa5]*[0-9]*[a-z]*[A-Z]*$"))
+            </param>
+            <message>“登录账号”只能包含中文,数字[0-9],英文字母[a-z,A-Z]！</message>
+        </field-validator>
+        
+	</field>
+	
+	<field name="account.email" >
+		<field-validator type="email">
+           <message>格式应为邮箱！</message>
+       </field-validator>
+	</field>
+	
+	<field name="account.period.end" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+                 !(account.period != null &amp;&amp; account.period.getStart() != null 
+                 	&amp;&amp; account.period.getEnd() != null 
+                 	&amp;&amp; account.period.end.before(account.period.start) )
+            </param>
+            <message>“有效期”起始时间应在结束时间之前！</message>
+        </field-validator>
+	</field>
+	
+	<field name="account.description" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+				( account.description.length() &lt; 200)
+            </param>
+            <message>“描述”长度不能大于200字符！</message>
+        </field-validator>
+	</field>
+</validators>

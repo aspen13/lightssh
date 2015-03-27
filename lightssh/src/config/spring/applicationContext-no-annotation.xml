@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+
+	<!-- Hibernate SessionFactory JPA-->
+	<!--  
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" lazy-init="true">
+        <property name="dataSource" ref="dataSource" />     
+        
+		<property name="packagesToScan">
+			<list>
+				<value>com.google.code.lightssh.project.**.entity</value>
+			</list>
+		</property>
+		
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.query.substitutions">true 'Y', false 'N'</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>   
+    </bean>
+	-->
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"> 
+	    <property name="persistenceUnitName" value="lightssh" />
+	    <property name="dataSource" ref="dataSource" />
+	    <property name="jpaVendorAdapter"> 
+	        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"> 
+	            <property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" /> 
+	        </bean> 
+	    	<!--  
+	        <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter"> 
+	            <property name="databasePlatform" value="org.apache.openjpa.jdbc.sql.OracleDictionary" /> 
+	            <property name="showSql" value="true" /> 
+	            <property name="generateDdl" value="true" />
+	        </bean> 
+	    	-->
+	    </property>
+	</bean>
+	
+	<!-- 无实现类的bean -->
+	
+    <!-- DAO|jobInterval -->
+	<bean id="jobIntervalDao" class="com.google.code.lightssh.common.dao.jpa.JpaDao">
+		<constructor-arg>
+    		<value>com.google.code.lightssh.project.scheduler.entity.JobInterval</value>
+    	</constructor-arg>    
+        <!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
+	</bean>
+	
+	<!-- DAO|tree node -->
+	<bean id="nodeDao" class="com.google.code.lightssh.common.dao.jpa.JpaDao">
+		<constructor-arg>
+    		<value>com.google.code.lightssh.project.tree.entity.Node</value>
+    	</constructor-arg>    
+        <!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
+	</bean>
+	
+	<!-- LOG|loginlog -->
+	<bean id="loginLogDao" class="com.google.code.lightssh.common.dao.jpa.JpaDao">
+		<constructor-arg>
+			<value>com.google.code.lightssh.project.log.entity.LoginLog</value>
+    	</constructor-arg>
+        <!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
+	</bean>
+	
+	<!-- DAO|loginFailure -->
+	<bean id="loginFailureDao" class="com.google.code.lightssh.common.dao.jpa.JpaDao">
+		<constructor-arg>
+			<value>com.google.code.lightssh.project.security.entity.LoginFailure</value>
+    	</constructor-arg>
+        <!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
+	</bean>
+	
+	<!-- DAO|system param -->
+	<bean id="systemParamDao" class="com.google.code.lightssh.common.dao.jpa.JpaDao">
+		<constructor-arg>
+    		<value>com.google.code.lightssh.project.param.entity.SystemParam</value>
+    	</constructor-arg>
+        <!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
+	</bean>
+	
+</beans>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd" default-lazy-init="true">
+
+	<context:annotation-config/>
+	
+	<context:component-scan base-package="com.google.code.lightssh">
+	    <context:include-filter type="aspectj" expression="com.google.code.lightssh..*dao"/>
+	    <context:include-filter type="aspectj" expression="com.google.code.lightssh..*service"/>
+	    <context:include-filter type="aspectj" expression="com.google.code.lightssh..*web"/>
+	</context:component-scan>
+	
+	<!-- Enable @Transactional support -->
+    <tx:annotation-driven/>
+
+    <!-- Enable @AspectJ support -->
+    <aop:aspectj-autoproxy/>
+    
+	<!-- Transaction -->
+    <aop:config>
+        <aop:advisor id="managerTx" advice-ref="txAdvice" pointcut="execution(* com.google.code.lightssh..*.*Manager.*(..))"/>    	
+
+        <aop:aspect id="LogAspect" ref="systemLogAspect">
+        	<aop:pointcut id="businessService" expression="(execution(* com..*.BaseManager+.save(com.google.code.lightssh.common.entity.Persistence+))) OR (execution(* com..*.BaseManager+.remove(..))) "/>
+        	<aop:after pointcut-ref="businessService" method="doAfter"/>
+        </aop:aspect> 	
+    </aop:config>
+    <!-- 系统日志切面 -->
+    <bean id="systemLogAspect" class="com.google.code.lightssh.project.log.aop.SystemLogAspect" />
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="list*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="load*" propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="is*" propagation="SUPPORTS" read-only="true"/>
+			
+            <tx:method name="*" timeout="20"/>
+            <tx:method name="writeSystemLog" propagation="REQUIRES_NEW" timeout="30"/>
+            <tx:method name="newTransaction*" propagation="REQUIRES_NEW" timeout="30"/>
+        </tx:attributes>
+    </tx:advice>
+    
+    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+    <!--  
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    -->
+    
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    
+    <!-- system config -->
+    <bean id="systemConfig" class="com.google.code.lightssh.project.config.ProjectConfig" scope="singleton" init-method="init"/>
+    
+    <!-- data source spied-->
+    <!--  
+    <bean id="dataSourceSpied" class="com.google.code.lightssh.common.config.ConfigurableDataSource" destroy-method="close" init-method="init">
+		<property name="systemConfig" ref="systemConfig"/>
+	</bean>
+    -->
+	
+	<bean id="dataSourceFactory"  class="com.google.code.lightssh.common.config.DataSourceFactory">
+		<property name="systemConfig" ref="systemConfig"/>
+	</bean>
+	<bean id="dataSourceSpied" factory-bean="dataSourceFactory" factory-method="createDataSource" />
+	
+	<!-- data source -->
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+    	<constructor-arg ref="dataSourceSpied" />
+		<property name="logFormatter">
+			<bean class="com.google.code.lightssh.common.config.JdbcLogCustomFormatter">
+				<property name="systemConfig" ref="systemConfig" />
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL: " />
+			</bean>
+		</property> 
+	</bean>
+	
+	<!-- email sender -->
+	<bean id="mailSender" class="com.google.code.lightssh.common.mail.sender.ApacheMailSender">
+		<property name="debug" value="false"/>
+		<property name="charset" value="UTF-8"/>
+	</bean>
+	
+	<!-- thread pool -->
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+		<property name="maxPoolSize" value="30" />
+		<property name="queueCapacity" value="70" />
+	</bean>
+	
+	<!-- secondary thread pool -->
+	<bean id="secondaryTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="20" />
+		<property name="queueCapacity" value="180" />
+	</bean>
+	<!-- WEBLOGIC NOT ALLOWED -->
+	<!--  
+	<import resource="applicationContext-no-annotation.xml"/>
+	<import resource="applicationContext-cache.xml"/>
+	<import resource="applicationContext-shiro.xml"/>
+	-->
+	
+</beans>

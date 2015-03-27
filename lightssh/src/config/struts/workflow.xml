@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<package name="workflow_deployment" extends="default" namespace="/workflow/deployment">
+		<action name="deploy" class="workflowAction" method="deploy">
+			<result name="input">/pages/workflow/deployment/profile.jsp</result>	
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+        <action name="undeploy" class="workflowAction" method="undeploy">
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+        <action name="list" class="workflowAction" method="deploymentList">
+			<result name="success">/pages/workflow/deployment/list.jsp</result>	
+        </action>
+	</package>
+	
+	<package name="workflow_process" extends="default" namespace="/workflow/process">
+		<action name="definitionlist" class="workflowProcessAction" method="processDefinitionList">
+			<result name="success">/pages/workflow/process/list_definition.jsp</result>	
+        </action>
+        
+		<action name="popupdef" class="workflowProcessAction" method="processDefinitionList">
+			<result name="success">/pages/workflow/process/popup_definition.jsp</result>	
+        </action>
+        
+		<action name="instancelist" class="workflowProcessAction" method="processInstanceList">
+			<result name="success">/pages/workflow/process/list_instance.jsp</result>	
+        </action>
+        
+		<action name="list" class="workflowProcessAction" method="list">
+			<result name="success">/pages/workflow/process/list_process.jsp</result>	
+        </action>
+        
+		<action name="my" class="workflowProcessAction" method="myProcess">
+			<result name="success">/pages/workflow/process/my_process.jsp</result>	
+        </action>
+        
+        <action name="view" class="workflowProcessAction" method="view">
+			<result name="success">/pages/workflow/process/view.jsp</result>	
+        </action>
+        
+        <action name="viewproc" class="workflowProcessAction" method="viewProc">
+			<result name="success">/pages/workflow/process/view_profile.jsp</result>
+        </action>
+        
+        <action name="viewtasklog" class="workflowProcessAction" method="viewTasklog">
+			<result name="success">/pages/workflow/process/view_tasklog.jsp</result>	
+        </action>
+        
+        <action name="viewimage" class="workflowProcessAction" method="viewImage">
+			<result name="success">/pages/workflow/process/view_image.jsp</result>
+        </action>
+        
+        <action name="procdefimage" class="workflowProcessAction" method="procDefImage">
+        	<result name="input">/pages/workflow/process/view_error.jsp</result>
+			<result name="success" type="image"/>	
+        </action>
+        
+        <action name="procactiveimage" class="workflowProcessAction" method="procActiveImage">
+			<result name="input">/pages/workflow/process/view_error.jsp</result>
+			<result name="success" type="image"/>	
+        </action>
+        
+        <action name="viewbizdata" class="workflowProcessAction" method="viewBizData">
+			<result name="input">/pages/workflow/process/view_error.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="namespace">${#request.bizView.namespace}</param>
+				<param name="actionName">${#request.bizView.action}</param>
+				<param name="workflowBizKey">${#request.bizKey}</param>
+			</result>
+        </action>
+        
+        <action name="terminate" class="workflowProcessAction" method="terminate">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+    </package>
+    
+	<package name="workflow_task" extends="default" namespace="/workflow/task">
+		<action name="list" class="workflowTaskAction" method="list">
+			<result name="success">/pages/workflow/task/list.jsp</result>	
+        </action>
+        
+		<action name="mytodolist" class="workflowTaskAction" method="myTodoList">
+			<result name="success">/pages/workflow/task/my_todo_list.jsp</result>	
+        </action>
+        
+		<action name="mytodocount" class="workflowTaskAction" method="myTodoCount">
+			<result name="success" type="json">
+				<param name="includeProperties">count</param>
+			</result>
+        </action>
+        
+		<action name="myassignlist" class="workflowTaskAction" method="myAssignList">
+			<result name="success">/pages/workflow/task/my_assign_list.jsp</result>	
+        </action>
+        
+		<action name="claim" class="workflowTaskAction" method="claim">
+			<result name="success" type="redirectAction">mytodolist</result>	
+        </action>
+        
+		<action name="proxyclaim" class="workflowTaskAction" method="proxyClaim">
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+		<action name="multiclaim" class="workflowTaskAction" method="multiClaim">
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+		<action name="prepare" class="workflowTaskAction" method="prepare">
+			<result name="input" type="redirectAction">mytodolist</result>
+			<result name="success">/pages/workflow/process/view.jsp</result>
+        </action>
+        
+        <!-- Deprecated -->
+		<action name="submit" class="workflowTaskAction" method="submit">
+			<result name="success" type="chain">view</result>
+        </action>
+        
+        <!-- Deprecated -->
+		<action name="view" class="workflowTaskAction" method="view">
+			<result name="success">/pages/workflow/form/rendering.jsp</result>
+        </action>
+        
+		<action name="complete" class="workflowTaskAction" method="complete">
+			<result name="input" type="redirectAction">mytodolist</result>
+			<result name="success" type="redirectAction">
+				<param name="namespace">/workflow/process</param>
+				<param name="actionName">my</param>
+			</result>	
+        </action>
+        
+		<action name="undo" class="workflowTaskAction" method="undo">
+			<result name="input" type="redirectAction">
+				<param name="namespace">/workflow/process</param>
+				<param name="actionName">my</param>
+			</result>
+			<result name="success" type="redirectAction">mytodolist</result>
+        </action>
+        
+		<action name="countersign" class="workflowTaskAction" method="countersign">
+			<result name="success" type="json">
+				<param name="includeProperties">result.*</param>
+			</result>
+        </action>
+        
+	</package>
+	
+	<package name="workflow" extends="default" namespace="/workflow">
+		<action name="processlist" class="workflowAction" method="processlist">
+			<result name="success">/pages/workflow/list_process.jsp</result>	
+        </action>
+        
+    </package>
+    
+</struts>

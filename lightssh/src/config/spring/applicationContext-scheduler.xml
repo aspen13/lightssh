@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd" default-lazy-init="true">
+		
+	<bean id="schedulerManager" class="com.google.code.lightssh.project.scheduler.service.SchedulerManagerImpl">
+		<property name="jobIntervalManager" ref="jobIntervalManager" />
+		<property name="quartzScheduler" ref="quartzScheduler"/>
+	</bean>	
+		
+	<bean id="exampleBusinessObject" class="com.google.code.lightssh.project.example.service.QuartzExampleManagerImpl"/>
+	<bean id="exampleJobDetail" class="com.google.code.lightssh.common.support.quartz.BeanInvokingJobDetailFactoryBean">
+		<property name="targetBean" value="exampleBusinessObject" />
+		<property name="targetMethod" value="exampleDoIt" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="exampleCronTrigger" class="com.google.code.lightssh.common.support.quartz.MyCronTriggerFactoryBean">
+		<property name="jobDetail" ref="exampleJobDetail"/>
+		<property name="cronExpression" value="0 0/10 * * * ?" />
+		<property name="description" value="定时任务示例" />
+	</bean>
+	
+	<bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="exampleCronTrigger" />
+			</list>
+		</property>
+		
+		<!-- cluster -->
+		<property name="dataSource" ref="dataSource"/>
+		<property name="overwriteExistingJobs" value="true"/>
+		<property name="applicationContextSchedulerContextKey" value="applicationContextKey"/>
+		<property name="configLocation" value="classpath:config/quartz.properties" /> 
+	</bean>
+	
+</beans>

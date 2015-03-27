@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	
+	<!-- 系统日志 -->
+	<package name="settings_log" extends="default" namespace="/settings/log">
+		<action name="list" class="accessAction" method="list">
+			<result name="input">/pages/settings/log/list.jsp</result>	
+			<result name="success">/pages/settings/log/list.jsp</result>	
+        </action>
+        
+        <action name="loginlist" class="loginLogAction" method="list">
+			<result name="input">/pages/settings/log/login_list.jsp</result>	
+			<result name="success">/pages/settings/log/login_list.jsp</result>	
+        </action>
+        
+		<action name="compare" class="accessAction" method="compare">
+			<result name="input">/pages/settings/log/list.jsp</result>	
+			<result name="success">/pages/settings/log/compare.jsp</result>	
+        </action>
+    </package>
+    
+    <!-- 定时时钟 -->
+    <package name="settings_scheduler" extends="default" namespace="/settings/scheduler">
+    	<action name="list" class="schedulerAction" method="listTriggers">
+			<result name="input">/pages/settings/scheduler/list_triggers.jsp</result>	
+			<result name="success">/pages/settings/scheduler/list_triggers.jsp</result>	
+        </action>
+        
+    	<action name="toggle" class="schedulerAction" method="toggle">
+			<result name="success" type="chain">list</result>	
+        </action>
+        
+    	<action name="refresh" class="schedulerAction" method="refresh">
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+    	<action name="edit" class="schedulerAction" method="editTrigger">
+    		<result name="input" type="redirectAction">list</result>
+			<result name="success">/pages/settings/scheduler/profile_cronexp.jsp</result>
+        </action>
+        
+    	<action name="save" class="schedulerAction" method="saveTrigger">
+			<result name="input">/pages/settings/scheduler/profile_cronexp.jsp</result>
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+	</package>
+	
+	<!-- 计划任务 -->
+	<package name="settings_plan" extends="default" namespace="/settings/plan">
+		<action name="list" class="planAction" method="list">
+			<result name="success">/pages/settings/scheduler/list_plan.jsp</result>	
+        </action>
+        
+    	<action name="listdetail" class="planAction" method="listdetail">
+			<result name="success">/pages/settings/scheduler/list_plan_detail.jsp</result>	
+        </action>
+        
+    	<action name="detailinqueue" class="planAction" method="detailInQueue">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" type="redirectAction">
+    			<param name="actionName">listdetail</param>
+				<param name="plan.id">${plan.id}</param>
+    		</result>
+        </action>
+        
+    	<action name="viewdetail" class="planAction" method="viewdetail">
+    		<result name="error" type="redirectAction">list</result>	
+    		<result name="input" type="redirectAction">
+    			<param name="actionName">listdetail</param>
+				<param name="plan.id">${plan.id}</param>
+    		</result>	
+			<result name="success">/pages/settings/scheduler/view_plan_detail.jsp</result>	
+        </action>
+	</package>
+	
+	<!-- 计量单位 -->
+    <package name="settings_uom" extends="default" namespace="/settings/uom">
+    	<action name="edit" class="uomAction" method="edit">
+			<result name="input">/pages/settings/uom/profile.jsp</result>	
+			<result name="success">/pages/settings/uom/profile.jsp</result>	
+        </action>
+        
+    	<action name="save" class="uomAction" method="save">
+			<result name="input">/pages/settings/uom/profile.jsp</result>	
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+    	<action name="toggle" class="uomAction" method="toggle">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+        
+    	<action name="list" class="uomAction" method="list">
+			<result name="input">/pages/settings/uom/list.jsp</result>	
+			<result name="success">/pages/settings/uom/list.jsp</result>	
+        </action>
+        
+    </package>
+    
+    <!-- 分类树 -->
+    <package name="settings_tree" extends="default" namespace="/settings/tree">
+    	<action name="edit" class="treeAction" method="edit">
+			<result name="input">/pages/settings/tree/profile.jsp</result>	
+			<result name="success">/pages/settings/tree/profile.jsp</result>	
+        </action>
+        
+    	<action name="save" class="treeAction" method="save">
+			<result name="input">/pages/settings/tree/profile.jsp</result>	
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+    	<action name="list" class="treeAction" method="list">
+			<result name="input">/pages/settings/tree/list.jsp</result>	
+			<result name="success">/pages/settings/tree/list.jsp</result>	
+        </action>
+        
+        <action name="popup" class="treeAction" method="popup">
+			<result name="success" >/pages/settings/tree/popup.jsp</result>
+        </action>
+        
+        <action name="unique" class="treeAction" method="unique">
+			<result name="success" type="json">
+				<param name="includeProperties">unique</param>
+			</result>
+        </action>
+        
+        <action name="editnode" class="treeAction" method="editnode">
+			<result name="success" >/pages/settings/tree/profile_node.jsp</result>
+        </action>
+        
+        <action name="savenode" class="treeAction" method="savenode">
+			<result name="input" >/pages/settings/tree/profile_node.jsp</result>
+			<result name="success" type="redirectAction">list</result>
+			<result name="next" type="chain">editnode</result>
+        </action>
+    </package>
+    
+    <!-- 地理区域 -->
+    <package name="settings_geo" extends="default" namespace="/settings/geo">
+    	<action name="edit" class="geoAction" method="edit">
+			<result name="input">/pages/settings/geo/profile.jsp</result>	
+			<result name="success">/pages/settings/geo/profile.jsp</result>	
+        </action>
+        
+    	<action name="save" class="geoAction" method="save">
+			<result name="input">/pages/settings/geo/profile.jsp</result>	
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+    	<action name="toggle" class="geoAction" method="toggle">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+        
+    	<action name="list" class="geoAction" method="list">
+			<result name="input">/pages/settings/geo/list.jsp</result>	
+			<result name="success">/pages/settings/geo/list.jsp</result>	
+        </action>
+        
+        <action name="listcountry" class="geoAction" method="listcountry">
+			<result name="success" type="json">
+				<param name="includeProperties">
+					list\[\d+\]\.code,
+					list\[\d+\]\.name,
+					list\[\d+\]\.active,
+					list\[\d+\]\.description
+				</param>
+			</result>
+        </action>
+        
+        <action name="listchildren" class="geoAction" method="listchildren">
+			<result name="success" type="json">
+				<param name="includeProperties">
+					list\[\d+\]\.code,
+					list\[\d+\]\.name,
+					list\[\d+\]\.active,
+					list\[\d+\]\.description
+				</param>
+			</result>
+        </action>
+    </package>
+    
+    <!-- 组织机构 -->
+    <package name="settings_organization" extends="default" namespace="/settings/organization">
+    	<action name="viewparent" class="organizationAction" method="viewparent">
+			<result name="input">/pages/party/organization/profile_parent_org.jsp</result>	
+			<result name="success">/pages/party/organization/view_parent_org.jsp</result>	
+        </action>
+        
+    	<action name="initparent" class="organizationAction" method="initparent">
+			<result name="input">/pages/party/organization/profile_parent_org.jsp</result>
+			<result name="success" type="chain">viewparent</result>	
+        </action>
+        
+		<action name="removecontact" class="partyContactAction" method="delete">
+			<result name="input" type="redirectAction">viewparent</result>	
+			<result name="success" type="chain">viewparent</result>	
+		</action>
+		
+		<action name="editcontact" class="partyContactAction" method="edit">
+			<result name="input" >viewparent</result>	
+			<result name="success" type="redirectAction">viewparent</result>	
+		</action>
+	</package>
+	
+	<!-- 系统参数 -->
+	<package name="settings_system_param" extends="default" namespace="/settings/param">
+		<action name="edit" class="systemParamAction" method="edit">
+			<result name="input">/pages/settings/param/profile.jsp</result>	
+			<result name="error" type="redirectAction">list</result>
+			<result name="success">/pages/settings/param/profile.jsp</result>	
+        </action>
+        
+		<action name="save" class="systemParamAction" method="save">
+			<result name="input">/pages/settings/param/profile.jsp</result>	
+			<result name="next" type="redirectAction">edit</result>
+			<result name="success" type="redirectAction">list</result>
+        </action>
+        
+        <action name="unique" class="systemParamAction" method="unique">
+			<result name="success" type="json">
+				<param name="includeProperties">unique</param>
+			</result>
+        </action>
+        
+        <action name="view" class="systemParamAction" method="view">
+        	<result name="input" type="redirectAction">list</result>
+			<result name="success">/pages/settings/param/view.jsp</result>	
+        </action>
+        
+        <action name="delete" class="systemParamAction" method="delete">
+			<result name="input" type="redirectAction">list</result>	
+			<result name="success" type="redirectAction">list</result>	
+        </action>
+        
+		<action name="list" class="systemParamAction" method="list">
+			<result name="success">/pages/settings/param/list.jsp</result>	
+        </action>
+	</package>
+	
+	<!-- 邮件 -->
+	<package name="settings_email" extends="default" namespace="/settings/email">
+	    <action name="list" class="emailContentAction" method="list">
+			<result name="success">/pages/settings/email/list.jsp</result>
+		</action>
+		
+	    <action name="view" class="emailContentAction" method="edit">
+			<result name="success">/pages/settings/email/view.jsp</result>
+		</action>
+		
+	    <action name="resend" class="emailContentAction" method="resend">
+			<result name="input" type="redirectAction">list</result>
+			<result name="success" type="redirectAction">list</result>
+		</action>
+	</package>
+	
+	<!-- 定制化列 -->
+	<package name="settings_column" extends="default" namespace="/settings/column">
+		<action name="listtable" class="columnTableAction" method="list">
+			<result name="success">/pages/settings/column/list_table.jsp</result>
+		</action>
+		
+		<action name="listitem" class="columnTableAction" method="listItem">
+			<result name="success">/pages/settings/column/list_item.jsp</result>
+		</action>
+	</package>
+</struts>

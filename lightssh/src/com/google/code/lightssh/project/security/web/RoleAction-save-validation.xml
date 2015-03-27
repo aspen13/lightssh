@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC 
+	"-//Apache Struts//XWork Validator 1.0.2//EN" 
+	"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+	
+<validators>
+	<field name="role.name" >
+		<field-validator type="requiredstring">
+            <message>“角色名”为必填项！</message>
+        </field-validator>
+        
+        <field-validator type="fieldexpression" >
+            <param name="expression">
+				( role.name.length() &lt; 101)
+            </param>
+            <message>“角色名”长度不能大于100字符！</message>
+        </field-validator>
+	</field>
+	
+	<field name="role.description" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+				( role.description.length() &lt; 201)
+            </param>
+            <message>“描述”长度不能大于200字符！</message>
+        </field-validator>
+	</field>
+</validators>

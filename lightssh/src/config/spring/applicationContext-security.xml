@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/util 
+       http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+	
+	<!-- shiroFilter 与 web.xml 对应 -->
+	<!--<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">-->
+	<bean id="shiroFilter" class="com.google.code.lightssh.common.support.shiro.MyShiroFilterFactoryBean">
+	    <property name="regexPathMatcher" value="true"/><!-- true表示正则匹配 -->
+	    <property name="urlsSectionType" value="INI_DB"/><!-- INI,DB,INI_DB -->
+	    <property name="urlsSectionService" ref="urlsSectionService"/>
+	    <property name="securityManager" ref="securityManager"/>
+	    <property name="loginUrl" value="/login.do"/>
+	    <property name="successUrl" value="/welcome.do"/>
+	    <property name="unauthorizedUrl" value="/403.do"/>
+	    <property name="filters">
+			<util:map>
+				<entry key="authc" value-ref="captchaFormAuthenticationFilter"/>
+				<entry key="perms" value-ref="myPermsFilter"/>
+				<entry key="cas" value-ref="casFilter"/>
+				<entry key="su" value-ref="singleUserLoginFilter"/>
+			</util:map>
+		</property>
+	    <property name="filterChainDefinitions">
+	    	<!-- 
+	    		正则表达式匹配规则
+	    		转义字符：问号用"\\?"，等号用"\\="，AND符号用"&amp;"
+	    		
+	    		例如匹配如下，
+	    		/example/action.do\\?account.id\\=\d+&amp;other\\=ok=authc,perms[XXX]
+	    		表示请求地址"/example/action.do?action.id=023&other=ok"需要 authc 和perms过滤。
+	    		而"/example/action.do?action.id=ABC&other=ok"则不需要authc和perms过滤。
+	    	-->
+	        <value>
+	        	/=anon
+	        	/shiro-cas*=cas
+	        	/login.do*=authc
+	        	/logout.do*=anon
+	        	/casticketerror.do*=anon
+	        	/showcaptcha.do*=anon
+	        	
+	        	/styles/**=anon
+	        	/scripts/**=anon
+	        	/files/**=anon
+	        	/images/**=anon
+	        	/pages/security/system/**=anon
+	        	/index.jsp=anon
+	        	/index.do*=anon
+	        	
+	        	/security/recovery/**=anon
+	        	
+	        	/webservices/**=anon
+	        	/remoting/**=anon
+	        	
+	            #权限配置
+	            #/security/account/edit.do=authc,perms[SECURITY_ACCOUNT_NEW]
+	            #/security/account/edit.do\\?account.id\\=\d+=authc,perms[SECURITY_ACCOUNT_EDIT]
+	            #/security/account/save.do=authc,perms[SECURITY_ACCOUNT_SAVE]
+	            
+	            <!--系统管理-->
+				#/settings/organization/viewparent.do=perms[SETTINGS_ORGANIZATION_VIEWPARENT]
+				#/settings/organization/initparent.do=authc,perms[SETTINGS_ORGANIZATION_INITPARENT]
+				
+				#/party/organization/edit.do=authc,perms[PARTY_ORGANIZATION_EDIT]
+				#/party/organization/save.do=authc,perms[PARTY_ORGANIZATION_SAVE]
+				#/party/organization/remove.do=authc,perms[PARTY_ORGANIZATION_REMOVE]
+				#/party/organization/list.do=authc,perms[PARTY_ORGANIZATION_LIST]
+				
+				#/security/account/view.do=authc,perms[SECURITY_ACCOUNT_VIEW]
+				#/security/account/edit.do=authc,perms[SECURITY_ACCOUNT_EDIT]
+				#/security/account/save.do=authc,perms[SECURITY_ACCOUNT_SAVE]
+				#/security/account/list.do=authc,perms[SECURITY_ACCOUNT_LIST]
+				#/security/account/prereset.do=authc,perms[SECURITY_ACCOUNT_PRERESET]
+				#/security/account/resetpassword.do=authc,perms[SECURITY_ACCOUNT_RESETPASSWORD]
+				#/security/account/remove.do=authc,perms[SECURITY_ACCOUNT_REMOVE]
+				#/security/account/releaselock.do=authc,perms[SECURITY_ACCOUNT_RELEASELOCK]
+				#/security/account/todoauditlist.do=authc,perms[SECURITY_ACCOUNT_TODOAUDITLIST]
+				#/security/account/todoaudit.do=authc,perms[SECURITY_ACCOUNT_TODOAUDIT]
+				#/security/account/audit.do=authc,perms[SECURITY_ACCOUNT_AUDIT]
+				#/security/account/auditlist.do=authc,perms[SECURITY_ACCOUNT_AUDITLIST]
+				
+				#/security/role/view.do=authc,perms[SECURITY_ROLE_VIEW]
+				#/security/role/edit.do=authc,perms[SECURITY_ROLE_EDIT]
+				#/security/role/save.do=authc,perms[SECURITY_ROLE_SAVE]
+				#/security/role/list.do=authc,perms[SECURITY_ROLE_LIST]
+				#/security/role/remove.do=authc,perms[SECURITY_ROLE_REMOVE]
+				#/security/role/todoauditlist.do=authc,perms[SECURITY_ROLE_TODOAUDITLIST]
+				#/security/role/todoaudit.do=authc,perms[SECURITY_ROLE_TODOAUDIT]
+				#/security/role/audit.do=authc,perms[SECURITY_ROLE_AUDIT]
+				#/security/role/auditlist.do=authc,perms[SECURITY_ROLE_AUDITLIST]
+				
+				<!--BASE管理-->
+				/settings/log/list.do=authc,perms[SETTINGS_LOG_LIST]
+				/settings/log/loginlist.do=authc,perms[SETTINGS_LOINLOG_LIST]
+	            
+	            #last
+	            /** = authc,su
+	       </value>
+	    </property>
+	</bean>
+		
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+	    <property name="realm" ref="shiroRealm"/>
+	</bean>
+	
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	
+	<bean id="singleUserLoginFilter" class="com.google.code.lightssh.common.support.shiro.SingleUserLoginFilter">
+		<property name="logoutUrl" value="/logout.do"/>
+		<property name="onlineUserCache" ref="onlineUserCache"/>
+	</bean>
+	
+	<!-- 授权服务  -->
+	<bean id="tempAuthService" class="com.google.code.lightssh.project.security.shiro.MyTemporaryAuthorizationService">
+		<property name="authorizedTicketManager" ref="authorizedTicketManager"/>
+	</bean>
+	
+	<bean id="urlsSectionService" class="com.google.code.lightssh.project.security.shiro.MyUrlsSectionService">
+		<property name="navigationManager" ref="navigationManager"/>
+	</bean>
+	
+	<bean id="myPermsFilter" class="com.google.code.lightssh.common.support.shiro.MyPermissionsAuthorizationFilter">
+		<!-- true表示使用正则表达式 -->
+		<constructor-arg><value>true</value></constructor-arg>
+		<property name="tempAuthService" ref="tempAuthService"/>
+	</bean>
+
+	<!-- JDBC Realm -->
+	<bean id="jdbcShiroRealm" class="com.google.code.lightssh.project.security.shiro.MyShiroRealm">
+		<property name="accountManager" ref="loginAccountManager"/>
+		<property name="cacheManager" ref="shiroCacheManager"/>
+	</bean>
+	
+	<!-- CAS Realm -->
+	<bean id="casShiroRealm" class="com.google.code.lightssh.project.security.shiro.MyCasRealm">
+		<property name="accountManager" ref="loginAccountManager"/>
+		<property name="cacheManager" ref="shiroCacheManager"/>
+		<property name="systemConfig" ref="systemConfig"/>
+	</bean>
+	
+	<bean id="shiroRealm" factory-bean="shiroRealmFactory" factory-method="createRealm" />
+	<bean id="shiroRealmFactory" class="com.google.code.lightssh.project.security.shiro.RealmFactory">
+		<property name="systemConfig" ref="systemConfig"/>
+		<property name="realms">
+			<map>
+				<entry key="jdbc" value-ref="jdbcShiroRealm" /> <!-- JDBC Realm -->
+				<entry key="cas" value-ref="casShiroRealm" /> <!-- CAS Realm -->
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManager" ref="cacheManager"/>
+	</bean>
+	
+	<bean id="captchaFormAuthenticationFilter" class="com.google.code.lightssh.project.security.shiro.MyFormAuthenticationFilter">
+		<property name="usernameParam" value="j_username"/>
+		<property name="passwordParam" value="j_password"/>
+		<property name="captchaParam" value="j_captcha"/>
+		<property name="rememberMeParam" value="j_rememberme"/>
+		<property name="systemConfig" ref="systemConfig"/>
+		
+		<property name="userService" ref="userService"/>
+		<property name="onlineUserCache" ref="onlineUserCache"/>
+	</bean>
+	
+	<!-- CAS filter -->
+	<bean id="casFilter" class="org.apache.shiro.cas.CasFilter">
+		<property name="failureUrl" value="casticketerror.do"/>
+	</bean>
+</beans>

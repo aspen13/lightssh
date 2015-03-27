@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<description>SSH框架</description>
+	<display-name>SSH Framework</display-name>
+	
+	<!-- 集群 -->
+	<!--<distributable/>-->
+
+	<!-- spring context -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:config/spring/applicationContext.xml
+			,classpath:config/spring/applicationContext-no-annotation.xml
+			,classpath:config/spring/applicationContext-cache.xml
+			,classpath:config/spring/applicationContext-security.xml
+			,classpath:config/spring/applicationContext-webservice.xml
+			,classpath:config/spring/applicationContext-scheduler.xml
+			,classpath:config/spring/applicationContext-workflow.xml
+			<!--  
+			,classpath:config/spring/applicationContext-remoting.xml
+			-->
+		</param-value>
+	</context-param>
+
+	<!-- lazy loading enabled in spring -->
+	<!--  
+	<filter>
+		<filter-name>OpenSessionInViewFilter</filter-name>
+		<filter-class>org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
+		<init-param>
+			<param-name>singleSession</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>OpenSessionInViewFilter</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+	-->
+	<filter>
+		<filter-name>OpenEntityManagerInViewFilter</filter-name>
+		<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>OpenEntityManagerInViewFilter</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
+	<!-- encoding -->
+	<filter>
+		<filter-name>encoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- spring security or shiro-->
+	<filter>
+		<filter-name>shiroFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>shiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- locale filter -->
+	<filter>
+		<filter-name>locale</filter-name>
+		<filter-class>com.google.code.lightssh.common.web.filter.LocaleFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>locale</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+		
+	<!-- theme filter -->
+	<filter>
+		<filter-name>theme</filter-name>
+		<filter-class>com.google.code.lightssh.common.web.filter.ThemeFilter</filter-class>
+		<init-param>
+			<param-name>allowed</param-name>
+			<param-value>default,vigor</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>theme</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- struts 2.x filter -->
+	<filter>
+		<filter-name>struts2</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>*.do</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<!--sitemesh filter-->
+	<filter>
+		<filter-name>sitemesh</filter-name>
+		<filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<!-- captcha servlet-->
+	<servlet>
+		<servlet-name>kaptcha</servlet-name>
+		<servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>
+		
+		<init-param>
+			<param-name>kaptcha.border</param-name>
+			<param-value>no</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>kaptcha.background.impl</param-name>
+			<param-value>com.google.code.lightssh.project.web.servlet.captcha.FunkyCaptchaBackground</param-value>
+		</init-param>
+
+		<init-param>
+			<param-name>kaptcha.noise.color</param-name>
+			<param-value>yellow</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>kaptcha.textproducer.font.color</param-name>
+			<param-value>white</param-value>
+		</init-param>
+		
+		<init-param>
+			<param-name>kaptcha.textproducer.char.space</param-name>
+			<param-value>5</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>kaptcha</servlet-name>
+		<url-pattern>/images/kaptcha.jpg</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>cxfservlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>cxfservlet</servlet-name>
+		<url-pattern>/webservices/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- remoting servlet -->
+	<servlet>
+		<servlet-name>remoting</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:config/spring/applicationContext-remoting.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>remoting</servlet-name>
+		<url-pattern>/remoting/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- log4j listener -->
+	<!--  
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	-->
+	
+	<!-- logback config -->
+	<servlet>
+		<servlet-name>ViewStatusMessages</servlet-name>
+		<servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ViewStatusMessages</servlet-name>
+		<url-pattern>/lbClassicStatus</url-pattern>
+	</servlet-mapping>
+	
+	<!-- startup listener -->
+	<listener>
+		<listener-class>com.google.code.lightssh.project.web.listener.StartupListener</listener-class>
+	</listener>
+	
+	<!-- memory clean -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

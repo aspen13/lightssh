@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC 
+	"-//Apache Struts//XWork Validator 1.0.2//EN" 
+	"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+	
+<validators>
+	<!--  
+	<field name="person.lastName" >
+		<field-validator type="requiredstring">
+            <message>“姓”为必填项！</message>
+        </field-validator>
+        
+        <field-validator type="fieldexpression" >
+            <param name="expression">
+				( person.lastName.length() &lt; 51)
+            </param>
+            <message>“姓”长度不能大于50字符！</message>
+        </field-validator>
+	</field>
+	
+	<field name="person.firstName" >
+		<field-validator type="requiredstring">
+            <message>“名字”为必填项！</message>
+        </field-validator>
+        
+        <field-validator type="fieldexpression" >
+            <param name="expression">
+				( person.firstName.length() &lt; 51)
+            </param>
+            <message>“名字”长度不能大于50字符！</message>
+        </field-validator>
+	</field>
+	-->
+	
+	<field name="person.name" >
+		<field-validator type="requiredstring">
+            <message>“名字”为必填项！</message>
+        </field-validator>
+        
+        <field-validator type="fieldexpression" >
+            <param name="expression">
+				( person.name.length() &lt; 51)
+            </param>
+            <message>“名字”长度不能大于50字符！</message>
+        </field-validator>
+	</field>
+	
+	<field name="person.credentialsType" >
+		<field-validator type="required">
+            <message>“证件类型”为必选项！</message>
+        </field-validator>
+	</field>
+	
+	<field name="person.description" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+				( person.description.length() &lt; 201)
+            </param>
+            <message>“描述”长度不能大于200字符！</message>
+        </field-validator>
+	</field>
+</validators>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<weblogic-web-app>
+
+	<container-descriptor>
+		<prefer-web-inf-classes>true</prefer-web-inf-classes>
+		<show-archived-real-path-enabled>true</show-archived-real-path-enabled>
+	</container-descriptor>
+	
+	<context-root>/lightssh</context-root>
+	
+	<session-descriptor>
+		<cookie-path>/lightssh</cookie-path>
+	</session-descriptor>
+	
+	<charset-params> 
+	    <input-charset> 
+	        <resource-path>/*</resource-path> 
+	        <java-charset-name>UTF-8</java-charset-name> 
+	    </input-charset> 
+	</charset-params>
+
+	<jsp-descriptor>
+		<encoding>UTF-8</encoding>
+	</jsp-descriptor>
+</weblogic-web-app>

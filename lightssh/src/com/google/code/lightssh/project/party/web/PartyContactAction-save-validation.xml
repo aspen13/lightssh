@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC 
+	"-//Apache Struts//XWork Validator 1.0.2//EN" 
+	"http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+	    
+<validators>
+	<field name="contact.type" >
+		<field-validator type="required">
+            <message>为必选项！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 邮政地址-收件人 -->
+	<field name="contact.consignee" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@POSTAL_ADDRESS.equals(contact.type) && contact.consignee.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@POSTAL_ADDRESS.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>收件人不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 邮政地址-邮编 -->
+	<field name="contact.postalCode" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@POSTAL_ADDRESS.equals(contact.type) && contact.postalCode.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@POSTAL_ADDRESS.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>邮编不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 邮政地址-地址 -->
+	<field name="contact.address" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@POSTAL_ADDRESS.equals(contact.type) && contact.address.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@POSTAL_ADDRESS.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>地址不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 电话-号码 -->
+	<field name="contact.contactNumber" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@TELEPHONE.equals(contact.type) && contact.contactNumber.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@TELEPHONE.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 传真-号码 -->
+	<field name="contact.contactNumber" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@FAX.equals(contact.type) && contact.contactNumber.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@FAX.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 手机-号码 -->
+	<field name="contact.contactNumber" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@MOBILE.equals(contact.type) && contact.contactNumber.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@MOBILE.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 邮箱 -->
+	<field name="contact.otherTypeValue" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@EMAIL.equals(contact.type) && contact.otherTypeValue.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@EMAIL.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- QQ -->
+	<field name="contact.otherTypeValue" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@QQ.equals(contact.type) && contact.otherTypeValue.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@QQ.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- MSN -->
+	<field name="contact.otherTypeValue" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@MSN.equals(contact.type) && contact.otherTypeValue.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@MSN.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 网址 -->
+	<field name="contact.otherTypeValue" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@WEB_ADDRESS.equals(contact.type) && contact.otherTypeValue.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@WEB_ADDRESS.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 其它类型 -->
+	<field name="contact.otherTypeName" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@OTHER.equals(contact.type) && contact.otherTypeName.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@OTHER.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<!-- 其它类型 -->
+	<field name="contact.otherTypeValue" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+            	<![CDATA[
+				( (@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@OTHER.equals(contact.type) && contact.otherTypeValue.length()>0)
+					|| !@com.google.code.lightssh.project.contact.entity.ContactMechanism$ContactMechanismType@OTHER.equals(contact.type)
+				)
+            	]]>
+            </param>
+            <message>不能为空！</message>
+        </field-validator>
+	</field>
+	
+	<field name="contact.description" >
+		<field-validator type="fieldexpression" >
+            <param name="expression">
+				( contact.description.length() &lt; 201)
+            </param>
+            <message>长度不能大于200字符！</message>
+        </field-validator>
+	</field>
+	
+</validators>
