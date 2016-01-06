@@ -21,7 +21,7 @@
  
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
         	<!-- daily rollover -->
-        	<fileNamePattern>/usr/local/tomcat/logs/zlrt-mp.%d{yyyy-MM-dd}.log</fileNamePattern>
+        	<fileNamePattern>/usr/local/tomcat/logs/lightssh.%d{yyyy-MM-dd}.log</fileNamePattern>
         	<!-- keep 365 days' worth of history -->
 			<maxHistory>365</maxHistory>
         </rollingPolicy>
@@ -53,8 +53,9 @@
     <logger name="jdbc.sql.timing" level="INFO"/>
     
     <logger name="com.google.code.lightssh" level="INFO"/>
+    <logger name="com.xxx.xxx.project" level="DEBUG"/>
     
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="console" />
         <appender-ref ref="dailyRollingFile"/>
     </root>
