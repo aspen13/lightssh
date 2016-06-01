@@ -7,10 +7,12 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			var MENU_WIDTH = 30;
+			var SELECTER_WIDTH = 160;
 			var select = $("#popup_multi_select");
 			var menu = $("#popup_multi_menu");
 			
 			$(select).width( $(select).width() - MENU_WIDTH );
+			
 			$(menu).width(MENU_WIDTH).css("display","block");
 			$(menu).css("margin-top",parseInt(($(select).height() - $(menu).height())/2));//垂直居中
 			
@@ -99,14 +101,17 @@
 			width:100%;
 			height:100%;
 			margin:0;
+			float:right;
 			display: block;
-			float: left;
+			clear: none;
 		}
 		
 		div#popup_multi_menu{
 			width:20px;
+			height:100%;
 			float:left;
 			font-size:12px;
+			clear: none;
 		}
 		
 		div#popup_multi_menu a{
@@ -145,7 +150,7 @@
 </head>
 
 <body>
-	<div id="popup_multi_menu" style="display: none">
+	<div id="popup_multi_menu" style="display: block">
 		<a class="inc_one" title="添加所选" onclick="incSelectedValue(this)"></a>
 		<a class="inc_all" title="添加全部" onclick="incAllValue(this)"></a>
 		<a class="dec_all" title="移除全部" onclick="decAllValue(this)"></a>
