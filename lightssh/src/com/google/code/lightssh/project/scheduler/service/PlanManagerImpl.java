@@ -411,6 +411,11 @@ public class PlanManagerImpl extends BaseManagerImpl<Plan> implements PlanManage
 					newStatus = detail.isSynTask()?PlanDetail.Status
 							.WAITING_FOR_REPLY:PlanDetail.Status.SUCCESS;
 					detail.setFinishTime( Calendar.getInstance() );
+					
+					if( !detail.isSynTask() ){ //同步执行任务成功，把依赖任务放入队列
+						//执行依依赖任务
+						executeRelyOnPlanDetail(true,detail.getId());
+					}
 				}else{
 					newStatus = result.isException()
 						?PlanDetail.Status.EXCEPTION:PlanDetail.Status.FAILURE;
